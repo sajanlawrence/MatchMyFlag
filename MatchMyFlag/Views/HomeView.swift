@@ -13,44 +13,11 @@ struct HomeView: View {
     var body: some View {
         NavigationStack{
             ZStack{
-                ZStack{
-                    RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 500)
-                        .ignoresSafeArea()
-                    Circle()
-                        .offset(x: -100, y: -500)
-                        .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
-                    Circle()
-                        .offset(x: 50, y: 500)
-                        .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
-                    Circle()
-                        .offset(x: 300, y: 0)
-                        .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
-                    
-                }
+                backgroundView
                 VStack{
-                    VStack{
-                        Text("Match My Flag")
-                            .foregroundStyle(.white)
-                            .font(.title)
-                            .bold()
-                        Text("Flip cards, find matching flags, and complete all the pairs as fast as you can!")
-                            .foregroundStyle(.white)
-                            .font(.footnote)
-                            .multilineTextAlignment(.center)
-                            .italic()
-                        
-                    }
-                    .padding(.vertical, 20)
-                    LazyVGrid(columns: viewModel.columns) {
-                        ForEach(viewModel.countries) { item in
-                            CardView(country: item)
-                                .shadow(radius: 20)
-                        }
-                    }
-                    Text("Moves: \(viewModel.totalTries)")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding()
+                    titleView
+                    cardListView
+                    footerView
                 }
                 .padding(.vertical)
             }
@@ -61,10 +28,6 @@ struct HomeView: View {
                     showSheet.toggle()
                 }
             }
-            .alert(isPresented: $showSheet) {
-                Alert(title: Text("Congrats🥳🥳🥳"), message: Text("You took \(viewModel.totalTries) moves to finish the game"), dismissButton: .default(Text("Close")))
-                
-            }
             .alert("Congrats🥳🥳🥳", isPresented: $showSheet) {
                 Button("Restart") {
                     viewModel.restartGame()
@@ -73,9 +36,57 @@ struct HomeView: View {
                 Text("You took \(viewModel.totalTries) moves to finish the game. Your Personal best is \(viewModel.getHighestScore()) moves")
                     .multilineTextAlignment(.center)
             }
-            
+        }
+    }
+}
+
+extension HomeView{
+    private var backgroundView: some View{
+        ZStack{
+            RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 500)
+                .ignoresSafeArea()
+            Circle()
+                .offset(x: -100, y: -500)
+                .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
+            Circle()
+                .offset(x: 50, y: 500)
+                .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
+            Circle()
+                .offset(x: 300, y: 0)
+                .foregroundStyle(RadialGradient(colors: [.blue, .black], center: .center, startRadius: 0, endRadius: 600))
+        }
+    }
+    
+    private var titleView: some View {
+        VStack{
+            Text("Match My Flag")
+                .foregroundStyle(.white)
+                .font(.title)
+                .bold()
+            Text("Flip cards, find matching flags, and complete all the pairs as fast as you can!")
+                .foregroundStyle(.white)
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+                .italic()
             
         }
+        .padding(.vertical, 20)
+    }
+    
+    private var cardListView: some View {
+        LazyVGrid(columns: viewModel.columns) {
+            ForEach(viewModel.countries) { item in
+                CardView(country: item)
+                    .shadow(radius: 20)
+            }
+        }
+    }
+    
+    private var footerView: some View {
+        Text("Moves: \(viewModel.totalTries)")
+            .font(.headline)
+            .foregroundStyle(.white)
+            .padding()
     }
 }
 
