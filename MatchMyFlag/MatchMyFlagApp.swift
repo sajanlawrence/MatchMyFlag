@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct MatchMyFlagApp: App {
+    @State private var viewModel = HomeViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environment(viewModel)
         }
     }
 }
